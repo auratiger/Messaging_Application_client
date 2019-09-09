@@ -6,10 +6,10 @@ const chatMessage = props => {
 
     //adding friends
     //TODO a pool of colors for the user messages
-    //TODO the user should be able to ubload an image, and have a pool of images
+    //TODO the user should be able to upload an image, and have a pool of images
     //TODO delete messages
     //TODO edit messages
-    //TODO store up to 50 current messages
+    //TODO store up to 30 current messages
 
     //TODO check how to make hocs
 

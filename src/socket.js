@@ -82,6 +82,7 @@ const Singleton = (function(){
 
     function createInstance(){
         const socket = new WebSocket(getServerUrl())
+        console.log(getServerUrl())
 
         socket.onopen = (event) => {
             console.log("connected: " + JSON.stringify(event, null, 4))

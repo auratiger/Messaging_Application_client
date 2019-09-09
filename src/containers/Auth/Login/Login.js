@@ -1,8 +1,10 @@
 import React from 'react';
+import {NavLink} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 import Input from '../../../components/UI/Input/Input';
 import Button from '../../../components/UI/Button/Button'
-import {NavLink} from 'react-router-dom';
+import * as actionTypes from '../../../store/actions/actionTypes';
 
 const Login = (props) => {
     return(
@@ -12,7 +14,7 @@ const Login = (props) => {
                 <Input type={"email"} text={"Email"}/>
                 <Input type={"password"} text={"Password"}/>
                 <div>
-                    <Button text="Continue" type="submit"/>
+                    <Button text="Continue"/>
                 </div>
                 <NavLink to={"auth"} onClick={props.clicked}>Sign Up</NavLink>                
             </form>
@@ -20,4 +22,10 @@ const Login = (props) => {
     )
 }
 
-export default Login;
+const mapDispatchToProps = dispatch => {
+    return{
+        onLogin: () => dispatch(actionTypes.USER_LOG_IN),
+    };
+};
+
+export default connect(null, mapDispatchToProps)(Login);
