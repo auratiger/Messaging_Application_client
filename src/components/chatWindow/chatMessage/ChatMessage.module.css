@@ -1,0 +1,57 @@
+.Box{
+    overflow: auto;
+}
+
+.Line{
+    display: flex;
+}
+
+.Message{
+    width: 70%;
+    height: auto;
+    border: 1px solid rgb(0, 0, 0);
+    padding: 10px;
+    margin: 10px;
+    text-align: left;
+    word-break: break-word;
+}
+
+.MyMessage{
+    border-radius: 20px 0px 20px 20px;
+    background-color: rgb(245, 50, 50);
+    margin-left: 21%;
+    float: right;
+}
+
+.OtherMessage{
+    border-radius: 0px 20px 20px 20px;
+    background-color: rgb(102, 102, 255);
+    margin-left: 2%;
+    float: left;
+}
+
+.MyUser{
+    float: right;
+    margin: 0;
+    padding: 0%;
+    padding-right: 2%; 
+}
+
+.OtherUser{
+    float: left;
+    margin: 0;
+    padding: 0%;
+    padding-left: 2%;
+}
+
+.MyImage{
+    border-radius: 50%;
+    margin-right: 2%;
+    margin-top: 2%;
+}
+
+.OtherImage{
+    border-radius: 50%;
+    margin-left: 2%;
+    margin-top: 2%;
+}

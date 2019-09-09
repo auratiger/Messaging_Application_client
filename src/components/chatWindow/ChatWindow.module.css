@@ -1,0 +1,38 @@
+.chat{
+    align-items: center;
+    border: 1px solid #eee;
+    margin: auto;
+    margin-top: 2%;
+    width: 500px;
+    height: 750px;
+    box-shadow: 0 2px 3px #ccc;
+    border-radius: 5px 5px 5px 5px;
+    background-color: rgba(71, 69, 69, 0.500);
+}
+
+.chatDisplay{
+    margin: auto;
+    overflow: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 94%;
+    height: 86%;
+    border: 1px solid rgba(141, 132, 141, 0.287);
+    border-radius: 10px 10px 10px 10px;
+    background-color: rgba(253, 253, 253, 0.8);
+}
+
+.chatBox{
+    width: 95%;
+    height: 10%;
+    resize: none;
+    border-radius: 5px 5px 5px 5px;
+    background-color: rgba(253, 253, 253, 0.8)
+}
+
+@media (max-width: 360px) {
+    .chat{
+        width: 300px;
+        height: 650px;
+    }
+}

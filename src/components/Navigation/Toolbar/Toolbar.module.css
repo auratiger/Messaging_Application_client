@@ -1,0 +1,75 @@
+.Toolbar{
+    height: 70px;
+    width: 100%;
+    background-color: rgb(58, 51, 51);
+    margin: auto;
+    text-align: center;
+}
+
+.NavigationItems {
+    list-style: none;
+    /* display: flex; */
+    height: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    /* float: right; */
+    overflow: hidden;
+    background-color: #333;
+}
+
+.NavigationItem {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    float: right;
+}
+
+.NavigationItem a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 25px 25px;
+    text-decoration: none;
+}
+
+.User {
+    font-size: 25px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: bold;
+    float: left;
+}
+
+.NavigationItem:hover,
+.NavigationItem:active,
+.NavigationItem.active {
+    background-color: rgb(212, 215, 218);
+    border-bottom: 4px solid #40A4C8;
+    color: white;}
+
+
+/* 
+@media (min-width: 500px) {
+    .NavigationItem {
+        margin: 0;
+        display: flex;
+        height: 100%;
+        width: auto;
+        align-items: center;
+    }
+    
+    .NavigationItem a {
+        color: white;
+        height: 100%;
+        padding: 16px 10px;
+        border-bottom: 4px solid transparent;
+    }
+    
+    .NavigationItem a:hover,
+    .NavigationItem a:active,
+    .NavigationItem a.active {
+        background-color: rgb(212, 215, 218);
+        border-bottom: 4px solid #40A4C8;
+        color: white;
+    }
+} */
