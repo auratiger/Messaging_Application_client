@@ -24,6 +24,14 @@ const toolbar = (props) => {
                     <li className={classes.NavigationItem}>
                         <NavLink to={"/"} exact>Profile</NavLink>
                     </li>
+                    <li className={classes.NavigationItem}>
+                        <select>
+                            <option value="volvo">red</option>
+                            <option value="saab">green</option>
+                            <option value="mercedes">yellow</option>
+                            <option value="audi">blue</option>
+                        </select>
+                    </li>
                     <li className={[classes.NavigationItem, classes.User].join(" ")}>
                         <NavLink to={"/Profile"} exact>{user}</NavLink>
                     </li>

@@ -88,6 +88,10 @@ const Singleton = (function(){
             console.log("connected: " + JSON.stringify(event, null, 4))
         }
 
+        socket.onopen = (event) => {
+            console.log(event.data);
+        }
+
         socket.onclose = (event) => {
             console.log("connection closed: " + JSON.stringify(event, null, 4))
         }

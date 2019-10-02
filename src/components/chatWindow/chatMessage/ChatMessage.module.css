@@ -18,16 +18,28 @@
 
 .MyMessage{
     border-radius: 20px 0px 20px 20px;
-    background-color: rgb(245, 50, 50);
     margin-left: 21%;
     float: right;
 }
 
 .OtherMessage{
     border-radius: 0px 20px 20px 20px;
-    background-color: rgb(102, 102, 255);
+    background-color: #cccccc;
     margin-left: 2%;
     float: left;
+}
+
+.red{
+    background-color: rgb(245, 50, 50);
+}
+.blue{
+    background-color: rgb(8, 87, 206);
+}
+.green{
+    background-color: rgb(22, 141, 48);
+}
+.yellow{
+    background-color: rgb(223, 255, 44);
 }
 
 .MyUser{

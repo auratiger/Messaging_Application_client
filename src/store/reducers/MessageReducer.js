@@ -1,4 +1,7 @@
 import * as actionTypes from '../actions/actionTypes'
+import Singleton from '../../socket';
+
+const socket = Singleton.getInstance();
 
 const initialState = {
     messages: [
@@ -20,12 +23,18 @@ const initialState = {
             user: "goshe",
             myMessage: true,
         },
-    ]
+    ],
+    userMessagesColor: "blue",
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type){
         case actionTypes.ADD_MESSAGE:
+            let msg = JSON.stringify(action.newMsg);
+            console.log(msg);
+            socket.send(msg);
+
+
             return{
                 ...state,
                 messages: [...state.messages, action.newMsg]

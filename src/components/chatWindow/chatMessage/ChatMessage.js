@@ -15,10 +15,11 @@ const chatMessage = props => {
 
     //this variable the conditional operator is used to decide
     // whether the message should be positiond from the user-client's side or the opposite 
+    let styles = [classes.Message, classes.MyMessage, classes.blue]
     let message = props.class ? 
 
         <div className={classes.Line}>
-            <div className={[classes.Message, classes.MyMessage].join(" ")}>
+            <div className={styles.join(" ")}>
                 {props.text}
             </div>
 
