@@ -19,8 +19,8 @@ const chatMessage = props => {
     let message = props.class ? 
 
         <div className={classes.Line}>
-            <div className={styles.join(" ")}>
                 {props.text}
+            <div className={styles.join(" ")}>
             </div>
 
             <img className={classes.MyImage} src={image} alt="" height="42" width="42"/> 

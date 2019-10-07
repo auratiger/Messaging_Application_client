@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
+import Singleton from '../../socket';
 
 const initialState = {
     users: [{
@@ -13,9 +14,11 @@ const initialState = {
     curUser: null,
 }
 
+const socket = Singleton.getInstance();
+
 const userReducer = (state = initialState, action) => {
     switch (action.type){
-        case actionTypes.USER_LOG_IN:
+        case actionTypes.USER_LOG_IN:            
             return state
             
         case actionTypes.USER_LOG_OUT:
@@ -24,6 +27,11 @@ const userReducer = (state = initialState, action) => {
                 curUser: null,
             }
         case actionTypes.USER_SIGN_UP:
+            console.log("signing up");
+
+            let jsonObject = {type: "USER_SIGNUP", msg: action.object}
+            socket.send(JSON.stringify(jsonObject));
+
             let updatedUsers = [...state.users, action.newUser]
             return {
                 ...state,
