@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import classes from './MainPage.module.css';
 import Aux from '../../hoc/Aux'
@@ -17,4 +18,8 @@ class MainPage extends Component {
     }
 }
 
-export default MainPage;
+const mapStateToProps = () => {
+    
+}
+
+export default connect(mapStateToProps)(MainPage);

@@ -17,10 +17,10 @@ class Auth extends Component{
 
     render(){
 
-        let page = <Login clicked={this.createNewUserHandler}/>
+        let page = <Login clicked={this.createNewUserHandler} {...this.props}/>
 
         if(this.state.create_new){
-            page = <SignUp clicked={this.createNewUserHandler}/>
+            page = <SignUp clicked={this.createNewUserHandler} {...this.props}/>
         }
 
         return(

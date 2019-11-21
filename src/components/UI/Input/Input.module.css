@@ -1,6 +1,6 @@
 .Input{
     width: 100%;
-    padding: 10px;
+    padding: 10px !important; 
     box-sizing: border-box;
 }
 
@@ -15,12 +15,18 @@
     border: 1px solid #ccc;
     font: inherit;
     padding: 10px 15px;
+    margin: 1px;
     display: block;
-    width: 100%;
+    width: 99.5%;
     box-sizing: border-box;
 }
 
 .InputElement:focus{
     outline: none;
     background-color: #ccc;
+}
+
+.Error{
+    border: 1px solid rgba(236, 24, 24, 0.883);
+    color: rgba(236, 24, 24, 0.883);
 }

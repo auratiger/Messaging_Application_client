@@ -17,11 +17,19 @@ const initialState = {
 const socket = Singleton.getInstance();
 
 const userReducer = (state = initialState, action) => {
+
+    let jsonObject;
+
     switch (action.type){
         case actionTypes.USER_LOG_IN:            
             return state
             
         case actionTypes.USER_LOG_OUT:
+
+            jsonObject = {type: "USER_LOGIN", msg: action.object}
+            socket.send(jsonObject);
+            
+
             return {
                 ...state,
                 curUser: null,
@@ -29,7 +37,7 @@ const userReducer = (state = initialState, action) => {
         case actionTypes.USER_SIGN_UP:
             console.log("signing up");
 
-            let jsonObject = {type: "USER_SIGNUP", msg: action.object}
+            jsonObject = {type: "USER_SIGNUP", msg: action.object}
             socket.send(JSON.stringify(jsonObject));
 
             let updatedUsers = [...state.users, action.newUser]

@@ -13,6 +13,7 @@ class App extends Component {
           <Layout>
             <Switch>
               <Route path="/auth" component={Auth}/>
+              <Route path="/resent/" component={MainPage}/>
               <Route path="/" component={MainPage}/>
             </Switch>
           </Layout>

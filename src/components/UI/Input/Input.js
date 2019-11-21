@@ -25,7 +25,7 @@ const Input = (props) => {
         default:
             element = () => {
                 return(
-                <div className={classes.Input}>
+                <div className={classes.Input, props.valid ? null : classes.Error}>
                     <input 
                         className={classes.InputElement} 
                         type={props.type}

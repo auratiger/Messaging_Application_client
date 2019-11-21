@@ -15,15 +15,17 @@ const chatMessage = props => {
 
     //this variable the conditional operator is used to decide
     // whether the message should be positiond from the user-client's side or the opposite 
-    let styles = [classes.Message, classes.MyMessage, classes.blue]
+    
+    // let styles = [classes.Message, classes.MyMessage, classes.blue]
     let message = props.class ? 
 
         <div className={classes.Line}>
+            <div className={[classes.Message, classes.MyMessage, classes.blue].join(" ")}>
                 {props.text}
-            <div className={styles.join(" ")}>
+
             </div>
 
-            <img className={classes.MyImage} src={image} alt="" height="42" width="42"/> 
+            <img className={classes.MyImage} src={image} alt="" height="42" width="42"/>
         </div>  
         
         :
