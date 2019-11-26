@@ -25,9 +25,9 @@ const Input = (props) => {
         default:
             element = () => {
                 return(
-                <div className={classes.Input, props.valid ? null : classes.Error}>
+                <div className={classes.Input}>
                     <input 
-                        className={classes.InputElement} 
+                        className={props.valid ? classes.InputElement : classes.Error} 
                         type={props.type}
                         name={props.name} 
                         placeholder={props.text}

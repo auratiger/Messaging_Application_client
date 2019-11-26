@@ -1,6 +1,6 @@
 .Input{
     width: 100%;
-    padding: 10px !important; 
+    padding: 10px; 
     box-sizing: border-box;
 }
 
@@ -15,7 +15,7 @@
     border: 1px solid #ccc;
     font: inherit;
     padding: 10px 15px;
-    margin: 1px;
+    margin: 5px;
     display: block;
     width: 99.5%;
     box-sizing: border-box;
@@ -23,10 +23,20 @@
 
 .InputElement:focus{
     outline: none;
-    background-color: #ccc;
+    background-color: rgba(223, 223, 250, 0.5);
+    box-shadow: 0 0 10px rgb(174, 174, 221);
 }
 
 .Error{
-    border: 1px solid rgba(236, 24, 24, 0.883);
-    color: rgba(236, 24, 24, 0.883);
+    outline: none;
+    border: 1px solid #ccc;
+    font: inherit;
+    padding: 10px 15px;
+    margin: 5px;
+    display: block;
+    width: 99.5%;
+    box-sizing: border-box;
+    background-color: rgba(255, 55, 55, 0.6);
+    box-shadow: 0 0 5px rgb(236, 24, 24);
 }
+

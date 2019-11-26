@@ -11,7 +11,7 @@ const initialState = {
         password : "koce123",
     }],
 
-    curUser: null,
+    securityToken: "s",
 }
 
 const socket = Singleton.getInstance();
@@ -29,10 +29,9 @@ const userReducer = (state = initialState, action) => {
             jsonObject = {type: "USER_LOGIN", msg: action.object}
             socket.send(jsonObject);
             
-
             return {
                 ...state,
-                curUser: null,
+                securityToken: null,
             }
         case actionTypes.USER_SIGN_UP:
             console.log("signing up");

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {NavLink, Redirect} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 import classes from './SignUp.module.css';
@@ -31,10 +31,11 @@ class SignUp extends Component {
         const name = event.target.name;
         const text = event.target.value;
         let valid = false;
+        let patt;
 
         switch(name){
             case "password":
-                var patt = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+                patt = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
                 valid = patt.test(text);
                 break;
             case "confirm":
@@ -43,17 +44,14 @@ class SignUp extends Component {
                 }
                 break;
             default:
-                var patt = /.{1,20}/;
+                patt = /.{1,20}/;
                 valid = patt.test(text);
         }
-
 
         this.setState({
             ...this.state,
             user: {...this.state.user ,[name]: {"text": text, "valid": valid}},
         })
-
-        console.log(this.state.user);      
     }
 
     sendFormHandler(event){

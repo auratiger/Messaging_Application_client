@@ -4,8 +4,8 @@ import classes from "./WelcomePage.module.css";
 const mainPage = () => {
 
     return (
-        <div>
-            
+        <div className={classes.Page}>
+            <h1>This is my personal messaging app</h1>
         </div>
     )
 

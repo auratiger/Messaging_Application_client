@@ -7,10 +7,10 @@ import * as actionTypes from '../../../store/actions/actionTypes';
 
 const toolbar = (props) => {
 
-    let user = props.curUser ? props.curUser.username : "User"
+    let user = props.securityToken ? props.username : "User"
     let auth = <NavLink to={"/auth"} exact>Log in</NavLink>
 
-    if (props.curUser){
+    if (props.securityToken){
         auth = <NavLink to={"/auth"} onClick={() => props.onLogOut()} exact>Log out</NavLink>
     }
 
@@ -43,7 +43,8 @@ const toolbar = (props) => {
 
 const mapStateToProps = state => {
     return{
-        curUser: state.user.curUser,
+        securityToken: state.user.securityToken,
+        username: state.user.users[0].username,
     };
 };
 
