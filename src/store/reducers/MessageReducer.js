@@ -3,7 +3,7 @@ import * as statusTypes from '../actions/statusTypes';
 
 import Singleton from '../../socket';
 
-const socket = Singleton.getInstance();
+// const socket = Singleton.getInstance();
 
 const initialState = {
     messages: [
@@ -14,7 +14,7 @@ const initialState = {
             myMessage: true,
         },
         {
-            text: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            text: "why hello there",
             time: "15:46",
             user: "koce",
             myMessage: false,
@@ -35,7 +35,7 @@ const reducer = (state = initialState, action) => {
             let jsonObject = {type: statusTypes.userMessage(), msg: action.newMsg}
             let msg = JSON.stringify(jsonObject);
             console.log(msg);
-            socket.send(msg);
+            // socket.send(msg);
 
 
             return{

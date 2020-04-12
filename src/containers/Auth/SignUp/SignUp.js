@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {createUser} from '../../../store/actions/authentication'
 
 import classes from './SignUp.module.css';
 import Input from '../../../components/UI/Input/Input';
 import Button from '../../../components/UI/Button/Button';
-import * as actionTypes from '../../../store/actions/actionTypes';
 
 class SignUp extends Component {
 
@@ -27,16 +27,16 @@ class SignUp extends Component {
         redirect: false,
     }
 
-    messagesValidateHandler(event){
+    messagesValidateHandler = (event) => {
         const name = event.target.name;
         const text = event.target.value;
         let valid = false;
         let patt;
 
         switch(name){
-            case "password":
-                patt = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-                valid = patt.test(text);
+            case "email":
+                patt = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;;
+                valid = patt.test(text);                
                 break;
             case "confirm":
                 if(text === this.state.user.password.text){
@@ -50,11 +50,15 @@ class SignUp extends Component {
 
         this.setState({
             ...this.state,
-            user: {...this.state.user ,[name]: {"text": text, "valid": valid}},
+            user: {
+                ...this.state.user,
+                [name]: {"text": text, "valid": valid}},
         })
     }
 
-    sendFormHandler(event){
+    handleSubmit = (event) => {
+
+        event.preventDefault()
 
         const pad = (num) => {
             return (num < 10 ? "0" : "") + num;
@@ -63,24 +67,26 @@ class SignUp extends Component {
         //TODO the data should be encrypted before sending
 
         const object = {
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            date: this.state.year + "-" + pad(this.state.month) + "-" + pad(this.state.day),
-            username: this.state.username,
-            email: this.state.email,
-            password: this.state.password,
+            firstName: this.state.user.firstName.text,
+            lastName: this.state.user.lastName.text,
+            date: this.state.user.year.text + "-" + pad(this.state.user.month.text) + "-" + pad(this.state.user.day.text),
+            username: this.state.user.username.text,
+            email: this.state.user.email.text,
+            password: this.state.user.password.text,
         };        
 
         this.setState({});
 
-        this.props.onSignUp(object);
+        this.props.createUser(object);
+
+        this.props.history.push("/profile")
     }
     
     render(){
         return(
             <div >
                 <h1>Sign Up</h1>
-                <form>
+                <form onSubmit={this.handleSubmit}>
                     <div className={classes.box}>
                         <Input changed={(event) => this.messagesValidateHandler(event)} 
                             name="firstName" type="text" text="First Name" 
@@ -110,23 +116,14 @@ class SignUp extends Component {
                     <Input changed={(event) => this.messagesValidateHandler(event)} 
                         name="confirm" type="password" text="Confirm password"
                         valid = {this.state.user.confirm.valid}/>   
-                </form>
-                <div>
-                    <Button text="Continue" clicked={(event) => {
-                        this.sendFormHandler(event)
-                        this.props.history.push("/profile")
-                        }}/>
-                </div>
-                <NavLink to={"auth"} onClick={this.props.clicked}>Log in</NavLink>                
+                    <div>
+                        <Button text="send"/>
+                    </div>
+                    <NavLink to={"auth"} onClick={this.props.clicked}>Log in</NavLink>  
+                </form>              
             </div>
         )
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return{
-        onSignUp: (object) => dispatch({type: actionTypes.USER_SIGN_UP, object: object}),
-    };
-};
-
-export default connect(null, mapDispatchToProps)(SignUp);
+export default connect(null, {createUser})(SignUp);

@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {loginUser} from '../../../store/actions/authentication';
 
 import Input from '../../../components/UI/Input/Input';
-import Button from '../../../components/UI/Button/Button'
-import * as actionTypes from '../../../store/actions/actionTypes';
+import Button from '../../../components/UI/Button/Button';
 
 class Login extends Component {
 
@@ -13,29 +13,42 @@ class Login extends Component {
         password: null,
     }
 
-    emailChangeHandler = (event) => {
+    handleInputChange = (event) => {
         this.setState({
-            ...this.state,
-            email: event.targer.value
-        });
+            [event.target.name] : event.target.value
+        })
     }
 
-    passwordChangeHandler = (event) => {
-        this.setState({
-            ...this.state,
-            email: event.targer.value
-        });
+    handleSubmit = (event) => {
+        event.preventDefault();
+
+        const user = {
+            email: this.state.email,
+            password: this.state.password,
+        }
+
+        this.props.loginUser(user);
     }
 
     render(){
         return(
             <div>
                 <h1>Log In</h1>
-                <form>
-                    <Input type={"email"} text={"Email"} valid={true}/>
-                    <Input type={"password"} text={"Password"} valid={true}/>
+                <form onSubmit={this.handleSubmit}>
+                    <Input  type={"email"} 
+                            text={"Email"} 
+                            changed={this.handleInputChange} 
+                            name="email"
+                            max="64"
+                            valid={true}/>
+                    <Input type={"password"} 
+                           text={"Password"}
+                           changed={this.handleInputChange}
+                           name="password"
+                           max="30"
+                           valid={true}/>
                     <div>
-                        <Button text="Continue"/>
+                        <Button text="send"/>
                     </div>
                     <NavLink to={"auth"} onClick={this.props.clicked}>Sign Up</NavLink>                
                 </form>
@@ -44,10 +57,4 @@ class Login extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return{
-        onLogin: () => dispatch(actionTypes.USER_LOG_IN),
-    };
-};
-
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(null, {loginUser})(Login);

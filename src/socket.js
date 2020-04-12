@@ -70,7 +70,7 @@ const AppConfig = {
     PROTOCOL: "ws:",
     HOST: "//localhost",
     PORT: ":8080",
-    ENDPOINT: "/WebSocket/server"
+    ENDPOINT: "/ChatRoom/chat"
 }
 
 const Singleton = (function(){

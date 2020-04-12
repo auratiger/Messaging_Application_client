@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import Aux from '../../hoc/Aux';
+import Aux from '../../hoc/AuxContainer';
 import Toolbar from '../Navigation/Toolbar/Toolbar';
 
 class Layout extends Component{

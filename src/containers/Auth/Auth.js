@@ -33,14 +33,7 @@ class Auth extends Component{
 
 const mapStateToProps = state => {
     return{
-        auth: state.user.users
     }
 }
-
-// const mapDispatchToProps = dispatch => {
-//     return{
-
-//     }
-// }
 
 export default connect(mapStateToProps)(Auth);

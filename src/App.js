@@ -14,6 +14,7 @@ class App extends Component {
       <Switch>
         <Route path="/welcomePage" component={WelcomePage}/>
         <Route path="/auth" component={Auth}/>
+        <Route path="/" component={Auth}/>
         <Redirect to="/welcomePage" component={WelcomePage}/>
       </Switch>
     )
@@ -43,7 +44,6 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    securityToken : state.user.securityToken,
   }
 }
 

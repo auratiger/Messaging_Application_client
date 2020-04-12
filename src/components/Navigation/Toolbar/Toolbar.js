@@ -43,8 +43,6 @@ const toolbar = (props) => {
 
 const mapStateToProps = state => {
     return{
-        securityToken: state.user.securityToken,
-        username: state.user.users[0].username,
     };
 };
 
