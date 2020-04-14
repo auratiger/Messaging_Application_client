@@ -77,7 +77,7 @@ class SignUp extends Component {
 
         this.setState({});
 
-        this.props.createUser(object);
+        this.props.createUser(object, this.props.history);
 
         this.props.history.push("/profile")
     }

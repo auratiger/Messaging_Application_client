@@ -78,7 +78,7 @@ class ChatWindow extends Component {
 
 const mapStateToProps = state => {
     return{
-        msg: state.message.messages
+        msg: state.messages
     };
 };
 

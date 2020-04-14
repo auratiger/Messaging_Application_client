@@ -1,18 +1,8 @@
 import axios from 'axios';
 import {GET_ERRORS, SET_CURRENT_USER} from './actionTypes';
 import {setAuthToken} from '../../setAuthToken';
+import parseJwt from '../../jwtParser/parseJwt';
 const qs = require('querystring')
-
-function parseJwt (token) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    return JSON.parse(jsonPayload);
-};
-
 
 export const loginUser = (user) => dispatch => {
 
@@ -45,11 +35,9 @@ export const setCurrentUser = decoded => {
     }
 }
 
-export const createUser = (user) => dispatch => {
+export const createUser = (user, history) => dispatch => {
     axios.post('http://localhost:8080/ChatRoom/rest/user/signup', user)
-            .then(res => {
-                console.log(res.data);
-            })
+            .then(res => history.push('/auth'))
             .catch(err => {
                 dispatch({
                     type: GET_ERRORS,
@@ -57,3 +45,10 @@ export const createUser = (user) => dispatch => {
                 })
             })
 }
+
+export const logoutUser = (history) => dispatch => {
+    localStorage.removeItem('jwtToken');
+    setAuthToken(false);
+    dispatch(setCurrentUser({}));
+    history.push('/auth');
+};

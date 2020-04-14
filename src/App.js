@@ -2,10 +2,26 @@ import React, {Component} from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 
+import {setCurrentUser, logoutUser} from './store/actions/authentication';
+import {setAuthToken} from './setAuthToken';
+
 import MainPage from './containers/MainPage/MainPage';
 import WelcomePage from './containers/WelcomePage/WelcomePage';
 import Layout from './components/Layout/Layout';
 import Auth from './containers/Auth/Auth';
+import parseJwt from './jwtParser/parseJwt';
+
+if(localStorage.jwtToken) {
+  setAuthToken(localStorage.jwtToken);
+  const decoded = parseJwt(localStorage.jwtToken);
+  setCurrentUser(decoded);
+
+  const currentTime = Date.now() / 1000;
+  if(decoded.exp < currentTime) {
+    logoutUser();
+    window.location.href = '/auth'
+  }
+}
 
 class App extends Component {
 
@@ -30,23 +46,23 @@ class App extends Component {
   }
   
 
-  render(){    
-
+  render(){   
     return (
         <div>
           <Layout>
-            {this.props.securityToken == null ? this.renderUnAuthPage() : this.renderAuthPage()}
+            {this.props.isAuthenticated ? this.renderAuthPage() : this.renderUnAuthPage()}
           </Layout>
         </div>
       );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-  }
-}
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
+  errors: state.errors,
+});
 
-export default connect(mapStateToProps, null)(App);
+export default connect(mapStateToProps, {setCurrentUser, logoutUser})(App);
 
 
