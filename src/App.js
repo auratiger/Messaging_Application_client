@@ -11,24 +11,25 @@ import Layout from './components/Layout/Layout';
 import Auth from './containers/Auth/Auth';
 import parseJwt from './jwtParser/parseJwt';
 
-if(localStorage.jwtToken) {
-  setAuthToken(localStorage.jwtToken);
-  const decoded = parseJwt(localStorage.jwtToken);
-  setCurrentUser(decoded);
-
-  const currentTime = Date.now() / 1000;
-  if(decoded.exp < currentTime) {
-    logoutUser();
-    window.location.href = '/auth'
-  }
-}
-
 class App extends Component {
+
+  componentDidMount(){
+    if(localStorage.jwtToken) {      
+      setAuthToken(localStorage.jwtToken);
+      const decoded = parseJwt(localStorage.jwtToken);
+    
+      const currentTime = Date.now() / 1000;
+      if(decoded.exp < currentTime) {
+        logoutUser();
+        window.location.href = '/auth'
+      }
+    }
+  }
 
   renderUnAuthPage = () => {
     return (
       <Switch>
-        <Route path="/welcomePage" component={WelcomePage}/>
+        <Route path="/welcomePage" component={MainPage}/>
         <Route path="/auth" component={Auth}/>
         <Route path="/" component={Auth}/>
         <Redirect to="/welcomePage" component={WelcomePage}/>
@@ -46,7 +47,7 @@ class App extends Component {
   }
   
 
-  render(){   
+  render(){       
     return (
         <div>
           <Layout>
@@ -59,7 +60,6 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user,
   errors: state.errors,
 });
 

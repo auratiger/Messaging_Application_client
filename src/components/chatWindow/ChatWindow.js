@@ -3,10 +3,105 @@ import {connect} from 'react-redux';
 
 import classes from './ChatWindow.module.css';
 import ChatMessage from './chatMessage/ChatMessage';
-import * as actionTypes from '../../store/actions/actionTypes';
+import {ADD_MESSAGE} from '../../store/actions/actionTypes';
 
 class ChatWindow extends Component {
 
+    constructor(props){
+        super(props);
+
+        this.state = {
+            ws: null,
+            message: ""
+        }
+    }
+
+    componentDidMount(){
+        this.connect();
+    }
+
+    timeout = 250;
+
+    connect = () => {
+        var ws = new WebSocket("ws://localhost:8080/ChatRoom/chat");
+        let that = this;
+        var connectInterval;
+
+        // websocket onopen event listener
+        ws.onopen = () => {
+            console.log("connected websocket main component");
+
+            this.setState({ ws: ws });
+
+            that.timeout = 250; // reset timer to 250 on open of websocket connection 
+            clearTimeout(connectInterval); // clear Interval on on open of websocket connection
+        };
+
+        // websocket onclose event listener
+        ws.onclose = e => {
+            console.log(
+                `Socket is closed. Reconnect will be attempted in ${Math.min(
+                    10000 / 1000,
+                    (that.timeout + that.timeout) / 1000
+                )} second.`,
+                e.reason
+            );
+
+            that.timeout = that.timeout + that.timeout; //increment retry interval
+            connectInterval = setTimeout(this.check, Math.min(10000, that.timeout)); //call check function after timeout
+        };
+
+        // websocket onerror event listener
+        ws.onerror = err => {
+            console.error(
+                "Socket encountered error: ",
+                err.message,
+                "Closing socket"
+            );
+
+            ws.close();
+        };
+
+        ws.onmessage = message => {
+            console.log("message from server: " + message.data);
+            this.props.addMessage(JSON.parse(message.data));
+        }
+    }
+
+    check = () => {
+        const {ws} = this.state;
+        if(!ws || ws.readyState === WebSocket.CLOSED) this.connect();
+    };
+
+    sendMessage = (event) => {
+        switch(event.which){
+            case 13:
+                event.preventDefault();
+
+                const {ws} = this.state;
+
+                const obj = {
+                    user: this.props.user,
+                    message: this.state.message,
+                }
+                  
+                try{
+                    ws.send(JSON.stringify(obj));    
+                }catch(err){
+                    console.log(err);
+                }
+
+                // this.props.addMessage(this.state.message);
+                this.setState({...this.state, message: ""});
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    messageHandler = (event) => {
+        this.setState({...this.state, message: event.target.value})
+    }
 
     autoscrollToBottom(){
         let i = document.getElementById("chat")
@@ -20,34 +115,6 @@ class ChatWindow extends Component {
     }
 
     render(){
-
-        const messageHandler = (event) => {
-            switch(event.which){
-                case 13: // enter|select key
-                    let textarea = document.getElementById("text")
-                    let text = textarea.value;
-                    if(text){
-                        let today = new Date()
-                        // let time = today.getHours() + ":" + today.getMinutes()
-                        let time = today.toLocaleTimeString() 
-
-                        let msg = {
-                            text: text,
-                            time: time,
-                            user: "goshe",
-                            myMessage: true,
-                        }
-
-                        this.props.onAddMessage(msg)
-                        textarea.value = ''
-                    }
-                    
-                    event.preventDefault();
-                    return true;
-                default:
-                    return false;
-            }
-        }
 
         let messages = this.props.msg.map(message =>{
             return(
@@ -69,8 +136,10 @@ class ChatWindow extends Component {
                     id="text" 
                     placeholder="Write a message"
                     autoFocus={true}
+                    value={this.state.message}
                     className={classes.chatBox} 
-                    onKeyDown={messageHandler}></textarea>
+                    onKeyDown={this.sendMessage}
+                    onChange={this.messageHandler}></textarea>
             </div>
         )
     }
@@ -78,14 +147,13 @@ class ChatWindow extends Component {
 
 const mapStateToProps = state => {
     return{
-        msg: state.messages
+        msg: state.messages.messages,
+        user: state.auth.user,
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return{
-        onAddMessage: (msg) => dispatch({type: actionTypes.ADD_MESSAGE, newMsg: msg})
-    };
-};
+const mapDispatchToProps = dispatch => ({
+    addMessage: (message) => dispatch({type: ADD_MESSAGE, payload: message})
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatWindow);

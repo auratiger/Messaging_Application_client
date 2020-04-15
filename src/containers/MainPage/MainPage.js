@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
-
 import classes from './MainPage.module.css';
 import Aux from '../../hoc/AuxContainer'
 import ChatWindow from '../../components/chatWindow/ChatWindow';
@@ -18,8 +16,4 @@ class MainPage extends Component {
     }
 }
 
-const mapStateToProps = () => {
-    
-}
-
-export default connect(mapStateToProps)(MainPage);
+export default (MainPage);
