@@ -3,8 +3,7 @@ import {connect} from 'react-redux';
 
 import classes from './ChatWindow.module.css';
 import ChatMessage from './chatMessage/ChatMessage';
-import {ADD_MESSAGE} from '../../store/actions/actionTypes';
-
+import {addMessage, getMessages} from '../../store/actions/MessageHandling';
 class ChatWindow extends Component {
 
     constructor(props){
@@ -12,18 +11,20 @@ class ChatWindow extends Component {
 
         this.state = {
             ws: null,
-            message: ""
+            message: "",
+            loaded: false,
         }
     }
 
     componentDidMount(){
         this.connect();
+        this.props.getMessages(this.props.user);
     }
 
     timeout = 250;
 
     connect = () => {
-        var ws = new WebSocket("ws://localhost:8080/ChatRoom/chat");
+        var ws = new WebSocket("ws://localhost:8080/ChatRoom/chat/"+this.props.user.id);
         let that = this;
         var connectInterval;
 
@@ -80,18 +81,34 @@ class ChatWindow extends Component {
 
                 const {ws} = this.state;
 
+                if(this.state.message.trim() === ""){
+                    return;
+                }                
+
                 const obj = {
-                    user: this.props.user,
+                    roomid: 1,
                     message: this.state.message,
                 }
                   
                 try{
                     ws.send(JSON.stringify(obj));    
-                }catch(err){
+                }catch(err){                    
                     console.log(err);
                 }
 
-                // this.props.addMessage(this.state.message);
+                // TODO: this is a temporary solution untill I find a better way to display the date -=-=-=-=-=-
+                let date = new Date();
+                let rep = (number) => {
+                    return number < 10 ? "0" + number : number;
+                }
+
+                this.props.addMessage({
+                    text: this.state.message,
+                    user: this.props.user.username,
+                    created: date.getFullYear() + "-" + rep(date.getMonth()) + "-" + rep(date.getDate()) + " " + date.getHours() + ":" + date.getMinutes(),
+                });
+                // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
                 this.setState({...this.state, message: ""});
                 return true;
             default:
@@ -115,15 +132,17 @@ class ChatWindow extends Component {
     }
 
     render(){
-
+        
         let messages = this.props.msg.map(message =>{
-            return(
 
-                <ChatMessage key={message.text + message.time} 
+            let orientation = this.props.user.username === message.user;            
+
+            return(
+                <ChatMessage key={message.text + message.created + message.user} 
                             user={message.user}
                             text={message.text} 
-                            time={message.time}
-                            class={message.myMessage}/>
+                            time={message.created}
+                            class={orientation}/>
             )
         })
 
@@ -152,8 +171,4 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => ({
-    addMessage: (message) => dispatch({type: ADD_MESSAGE, payload: message})
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChatWindow);
+export default connect(mapStateToProps, {addMessage, getMessages})(ChatWindow);

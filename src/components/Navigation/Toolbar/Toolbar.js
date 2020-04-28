@@ -1,17 +1,17 @@
 import React from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 import classes from './Toolbar.module.css';
-import * as actionTypes from '../../../store/actions/actionTypes';
+import {logoutUser} from '../../../store/actions/authentication';
 
 const toolbar = (props) => {
 
-    let user = props.securityToken ? props.username : "User"
-    let auth = <NavLink to={"/auth"} exact>Log in</NavLink>
+    let user = props.isAuthenticated ? props.username : "User"
+    let auth = <NavLink to={"/auth"} exact>Log in</NavLink>    
 
-    if (props.securityToken){
-        auth = <NavLink to={"/auth"} onClick={() => props.onLogOut()} exact>Log out</NavLink>
+    if (props.isAuthenticated){
+        auth = <NavLink to={"/auth"} onClick={() => props.logoutUser()} exact>Log out</NavLink>
     }
 
     return(
@@ -24,14 +24,6 @@ const toolbar = (props) => {
                     <li className={classes.NavigationItem}>
                         <NavLink to={"/"} exact>Profile</NavLink>
                     </li>
-                    <li className={classes.NavigationItem}>
-                        <select>
-                            <option value="volvo">red</option>
-                            <option value="saab">green</option>
-                            <option value="mercedes">yellow</option>
-                            <option value="audi">blue</option>
-                        </select>
-                    </li>
                     <li className={[classes.NavigationItem, classes.User].join(" ")}>
                         <NavLink to={"/Profile"} exact>{user}</NavLink>
                     </li>
@@ -43,13 +35,9 @@ const toolbar = (props) => {
 
 const mapStateToProps = state => {
     return{
+        username: state.auth.user.username,
+        isAuthenticated: state.auth.isAuthenticated,
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return{
-        onLogOut: () => dispatch({type: actionTypes.USER_LOG_OUT}),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(toolbar);
+export default connect(mapStateToProps, {logoutUser})(toolbar);

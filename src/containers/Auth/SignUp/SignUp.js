@@ -35,7 +35,7 @@ class SignUp extends Component {
 
         switch(name){
             case "email":
-                patt = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;;
+                patt = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
                 valid = patt.test(text);                
                 break;
             case "confirm":

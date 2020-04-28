@@ -1,19 +1,16 @@
 import React, {Component} from 'react';
 
-import Aux from '../../hoc/AuxContainer';
 import Toolbar from '../Navigation/Toolbar/Toolbar';
 
 class Layout extends Component{
     render(){
         return(
-            <Aux>
-                <div>
-                    <Toolbar/>
-                    <main >
-                        {this.props.children}
-                    </main>
-                </div>
-            </Aux>
+            <div>
+                <Toolbar/>
+                <main >
+                    {this.props.children}
+                </main>
+            </div>
         )
     }
 }

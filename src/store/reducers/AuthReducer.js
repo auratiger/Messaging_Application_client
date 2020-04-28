@@ -13,7 +13,7 @@ const initialState = () => {
     }else{
         return {
             isAuthenticated: false,
-            user: null,
+            user: {},
         }
     }
 }

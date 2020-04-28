@@ -9,6 +9,7 @@ import MainPage from './containers/MainPage/MainPage';
 import WelcomePage from './containers/WelcomePage/WelcomePage';
 import Layout from './components/Layout/Layout';
 import Auth from './containers/Auth/Auth';
+import EmailVerificationPage from './containers/EmailVerification/EmailVerificationPage';
 import parseJwt from './jwtParser/parseJwt';
 
 class App extends Component {
@@ -20,19 +21,20 @@ class App extends Component {
     
       const currentTime = Date.now() / 1000;
       if(decoded.exp < currentTime) {
-        logoutUser();
-        window.location.href = '/auth'
+        this.props.logoutUser(this.props.history);
       }
-    }
+    }     
   }
 
   renderUnAuthPage = () => {
     return (
       <Switch>
-        <Route path="/welcomePage" component={MainPage}/>
-        <Route path="/auth" component={Auth}/>
-        <Route path="/" component={Auth}/>
-        <Redirect to="/welcomePage" component={WelcomePage}/>
+        <Route exact path="/welcomePage" component={WelcomePage}/>
+        <Route exact path="/mainPage" component={MainPage}/>
+        <Route exact path="/email_verification/verify/*/*" component={EmailVerificationPage}/>
+        <Route exact path="/auth" component={Auth}/>
+        <Route exact path="/" component={Auth}/>
+        {/* <Redirect to="/welcomePage" component={WelcomePage}/> */}
       </Switch>
     )
   }
@@ -40,8 +42,10 @@ class App extends Component {
   renderAuthPage = () => {
     return(
       <Switch>
-          <Route path="/resent/" component={MainPage}/>
-          <Route path="/" component={MainPage}/>
+          <Route exact path="/resent/" component={MainPage}/>
+          <Route exact path="/email_verification/verify/{id}" component={EmailVerificationPage}/>
+          <Route exact path="/" component={MainPage}/>
+          <Redirect to="/auth" component={Auth}/>
       </Switch>
     )
   }

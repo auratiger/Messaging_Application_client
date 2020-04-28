@@ -2,9 +2,9 @@
     align-items: center;
     border: 1px solid #eee;
     margin: auto;
-    margin-top: 2%;
+    /* margin-top: 2%; */
     width: 500px;
-    height: 750px;
+    height: 93.8vh;
     box-shadow: 0 2px 3px #ccc;
     border-radius: 5px 5px 5px 5px;
     background-color: rgba(71, 69, 69, 0.500);
