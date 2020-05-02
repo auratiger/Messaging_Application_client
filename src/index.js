@@ -4,7 +4,6 @@ import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
-import './bootstrap-4.4.1-dist/css/bootstrap.min.css';
 
 import './index.css';
 import App from './App';

@@ -6,6 +6,10 @@
     text-align: center;
 }
 
+.root{
+    flex-grow: 1;
+}
+
 .NavigationItems {
     list-style: none;
     /* display: flex; */

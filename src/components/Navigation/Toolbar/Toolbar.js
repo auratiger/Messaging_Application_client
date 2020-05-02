@@ -1,37 +1,41 @@
 import React from 'react';
-import {NavLink, Link} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import {connect} from 'react-redux';
 
 import classes from './Toolbar.module.css';
 import {logoutUser} from '../../../store/actions/authentication';
 
-const toolbar = (props) => {
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+
+const toolbar = withRouter((props) => {
 
     let user = props.isAuthenticated ? props.username : "User"
-    let auth = <NavLink to={"/auth"} exact>Log in</NavLink>    
-
-    if (props.isAuthenticated){
-        auth = <NavLink to={"/auth"} onClick={() => props.logoutUser()} exact>Log out</NavLink>
+    let auth = props.isAuthenticated ? "Log out" : "Log in"
+    let fun = () => {
+        if(props.isAuthenticated){
+            props.logoutUser();
+        }
+        props.history.push("/auth")
     }
 
     return(
         <header>
-            <nav className={classes.Toolbar}>
-                <ul className={classes.NavigationItems}>
-                    <li className={classes.NavigationItem}>
-                        {auth}
-                    </li>
-                    <li className={classes.NavigationItem}>
-                        <NavLink to={"/"} exact>Profile</NavLink>
-                    </li>
-                    <li className={[classes.NavigationItem, classes.User].join(" ")}>
-                        <NavLink to={"/Profile"} exact>{user}</NavLink>
-                    </li>
-                </ul>
-            </nav>
+            <div className={classes.root}>
+                <AppBar position="static">
+                    <Toolbar>
+                        <Typography variant="h5" className={classes.root}>
+                            {user}
+                        </Typography>
+                        <Button color="inherit" onClick={fun}>{auth}</Button>
+                    </Toolbar>
+                </AppBar>   
+            </div>
         </header>   
     );
-};
+}); 
 
 const mapStateToProps = state => {
     return{

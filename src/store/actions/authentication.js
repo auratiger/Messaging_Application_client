@@ -4,7 +4,7 @@ import {setAuthToken} from '../../setAuthToken';
 import parseJwt from '../../jwtParser/parseJwt';
 const qs = require('querystring')
 
-export const loginUser = (user) => dispatch => {
+export const loginUser = (user, history) => dispatch => {
 
     const config = {
         headers: {
@@ -19,6 +19,7 @@ export const loginUser = (user) => dispatch => {
                 setAuthToken(token)
                 const decoded = parseJwt(token); 
                 dispatch(setCurrentUser(JSON.parse(decoded.sub)))
+                history.push("/")
             })
             .catch(err => {
                 dispatch({
@@ -37,7 +38,14 @@ export const setCurrentUser = decoded => {
 
 export const createUser = (user, history) => dispatch => {
     axios.post('http://localhost:8080/ChatRoom/rest/user/signup', user)
-            .then(res => history.push('/auth'))
+            .then(res => {
+                const token = res.data;
+                localStorage.setItem("jwtToken", token);
+                setAuthToken(token)
+                const decoded = parseJwt(token); 
+                dispatch(setCurrentUser(JSON.parse(decoded.sub)))
+                history.push("/")
+            })
             .catch(err => {
                 dispatch({
                     type: GET_ERRORS,

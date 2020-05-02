@@ -1,6 +1,5 @@
 import React from 'react';
 import classes from './ChatMessage.module.css';
-import image from '../../../resources/Images/user.png';
 
 const chatMessage = props => {
 
@@ -13,9 +12,6 @@ const chatMessage = props => {
 
     //TODO check how to make hocs
 
-    //this variable the conditional operator is used to decide
-    // whether the message should be positiond from the user-client's side or the opposite 
-    
     // let styles = [classes.Message, classes.MyMessage, classes.blue]
     let message = props.class ? 
 
@@ -23,15 +19,15 @@ const chatMessage = props => {
             <div className={[classes.Message, classes.MyMessage, classes.blue].join(" ")}>
                 {props.text}
 
-            </div>
+            </div>  
 
-            <img className={classes.MyImage} src={image} alt="" height="42" width="42"/>
+            <img className={classes.MyImage} src={"data:image/png;base64," + props.image} alt="" height="42" width="42"/>
         </div>  
         
         :
 
         <div className={classes.Line}>
-            <img className={classes.OtherImage} src={image} alt="" height="42" width="42"/> 
+            <img className={classes.OtherImage} src={"data:image/png;base64," + props.image} alt="" height="42" width="42"/> 
             
             <div className={[classes.Message, classes.OtherMessage].join(" ")}>
                 {props.text}

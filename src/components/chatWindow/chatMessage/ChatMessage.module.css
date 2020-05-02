@@ -18,13 +18,13 @@
 }
 
 .MyMessage{
-    border-radius: 20px 0px 20px 20px;
+    border-radius: 20px 20px 0px 20px;
     margin-left: 21%;
     float: right;
 }
 
 .OtherMessage{
-    border-radius: 0px 20px 20px 20px;
+    border-radius: 20px 20px 20px 0px;
     background-color: #cccccc;
     margin-left: 2%;
     float: left;

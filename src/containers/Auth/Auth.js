@@ -31,9 +31,4 @@ class Auth extends Component{
     }
 }
 
-const mapStateToProps = state => {
-    return{
-    }
-}
-
-export default connect(mapStateToProps)(Auth);
+export default connect()(Auth);

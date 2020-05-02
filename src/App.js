@@ -23,7 +23,7 @@ class App extends Component {
       if(decoded.exp < currentTime) {
         this.props.logoutUser(this.props.history);
       }
-    }     
+    }           
   }
 
   renderUnAuthPage = () => {
@@ -51,13 +51,11 @@ class App extends Component {
   }
   
 
-  render(){       
+  render(){        
     return (
-        <div>
-          <Layout>
-            {this.props.isAuthenticated ? this.renderAuthPage() : this.renderUnAuthPage()}
-          </Layout>
-        </div>
+        <Layout>
+          {this.props.isAuthenticated ? this.renderAuthPage() : this.renderUnAuthPage()}
+        </Layout>
       );
   }
 }

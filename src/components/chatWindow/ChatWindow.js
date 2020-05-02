@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+
 import classes from './ChatWindow.module.css';
 import ChatMessage from './chatMessage/ChatMessage';
 import {addMessage, getMessages} from '../../store/actions/MessageHandling';
+
 class ChatWindow extends Component {
 
     constructor(props){
@@ -13,12 +18,15 @@ class ChatWindow extends Component {
             ws: null,
             message: "",
             loaded: false,
+            wsError: false,
         }
     }
 
     componentDidMount(){
-        this.connect();
-        this.props.getMessages(this.props.user);
+        this.props.getMessages(this.props.user).then(() => {
+            this.setState({loaded: true});
+            this.connect();
+        });
     }
 
     timeout = 250;
@@ -29,27 +37,36 @@ class ChatWindow extends Component {
         var connectInterval;
 
         // websocket onopen event listener
-        ws.onopen = () => {
+        ws.onopen = () => { 
             console.log("connected websocket main component");
 
             this.setState({ ws: ws });
-
+            
             that.timeout = 250; // reset timer to 250 on open of websocket connection 
             clearTimeout(connectInterval); // clear Interval on on open of websocket connection
         };
 
         // websocket onclose event listener
         ws.onclose = e => {
-            console.log(
-                `Socket is closed. Reconnect will be attempted in ${Math.min(
-                    10000 / 1000,
-                    (that.timeout + that.timeout) / 1000
-                )} second.`,
-                e.reason
-            );
-
-            that.timeout = that.timeout + that.timeout; //increment retry interval
-            connectInterval = setTimeout(this.check, Math.min(10000, that.timeout)); //call check function after timeout
+            if(e.code === 1003){
+                
+                ws.close();
+                this.setState({
+                    ...this.state,
+                    wsError: true,
+                })
+            }else{
+                console.log(
+                    `Socket is closed. Reconnect will be attempted in ${Math.min(
+                        10000 / 1000,
+                        (that.timeout + that.timeout) / 1000
+                    )} second.`,
+                    e.reason
+                );
+    
+                that.timeout = that.timeout + that.timeout; //increment retry interval
+                connectInterval = setTimeout(this.check, Math.min(10000, that.timeout)); //call check function after timeout
+            }
         };
 
         // websocket onerror event listener
@@ -71,13 +88,13 @@ class ChatWindow extends Component {
 
     check = () => {
         const {ws} = this.state;
-        if(!ws || ws.readyState === WebSocket.CLOSED) this.connect();
+        if((!ws || ws.readyState === WebSocket.CLOSED) && !this.state.wsError) this.connect();
     };
 
     sendMessage = (event) => {
         switch(event.which){
             case 13:
-                event.preventDefault();
+                event.preventDefault();                
 
                 const {ws} = this.state;
 
@@ -132,34 +149,76 @@ class ChatWindow extends Component {
     }
 
     render(){
-        
-        let messages = this.props.msg.map(message =>{
 
-            let orientation = this.props.user.username === message.user;            
+        let messages;
 
-            return(
-                <ChatMessage key={message.text + message.created + message.user} 
-                            user={message.user}
-                            text={message.text} 
-                            time={message.created}
-                            class={orientation}/>
-            )
-        })
+        if(this.state.loaded){
+            messages = this.props.msg.map(message =>{
+
+                let orientation = this.props.user.username === message.user;            
+    
+                return(
+                    <ChatMessage key={message.text + message.created + message.user} 
+                                user={message.user}
+                                text={message.text} 
+                                time={message.created}
+                                class={orientation}
+                                image={this.props.user.userIcon}/>
+                )
+            })
+        }else{
+            messages = <CircularProgress />;
+        }
 
         return(
-            <div className={classes.chat}>
-                <div id="chat" className={classes.chatDisplay}>
-                    {messages}
-                </div>
-                <textarea 
-                    id="text" 
-                    placeholder="Write a message"
-                    autoFocus={true}
-                    value={this.state.message}
-                    className={classes.chatBox} 
-                    onKeyDown={this.sendMessage}
-                    onChange={this.messageHandler}></textarea>
-            </div>
+            <Grid container alignItems="stretch" direction="row" justify="space-between">
+
+                <Grid container direction="column" className={classes.leftBox} xs={2}>
+                    {/* <div className={classes.leftBox}></div> */}
+                    <Grid container className={classes.toolBox}>toolBox</Grid>
+                    <Grid container direction="row" className={classes.groupBox}>
+                        <Grid item>group</Grid>
+                        <Grid item>button</Grid>
+                    </Grid>
+                    {/* <Grid item className={classes.groupBox}>group 2</Grid>
+                    <Grid item className={classes.groupBox}>group 3</Grid> */}
+                </Grid>
+
+                <Grid container direction="row" justify="space-between" xs={8}>
+                    <Grid item xs={12}>
+                        <div id="chat" className={classes.chatDisplay}>
+                            {messages}
+                        </div>
+                    </Grid>
+                    <Grid item xs={12}>
+                        {/* <textarea 
+                                id="text" 
+                                placeholder="Write a message"
+                                autoFocus={true}
+                                value={this.state.message}
+                                className={classes.chatBox} 
+                                onKeyDown={this.sendMessage}
+                                onChange={this.messageHandler}>
+                        </textarea> */}
+                        <TextField
+                            id="textField"
+                            placeholder="Message"
+                            variant="outlined"
+                            multiline
+                            fullWidth
+                            rows={3}
+                            value={this.state.message}
+                            onChange={this.messageHandler}
+                            onKeyDown={this.sendMessage}>
+
+                        </TextField>
+                    </Grid>
+                </Grid>
+
+                <Grid container direction="column" className={classes.rigthBox} xs={2}>
+                    {/* <div className={classes.rigthBox}></div> */}
+                </Grid>
+            </Grid>
         )
     }
 }

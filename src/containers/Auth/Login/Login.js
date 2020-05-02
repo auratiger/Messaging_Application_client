@@ -1,16 +1,17 @@
 import React, {Component} from 'react';
-import {NavLink} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {loginUser} from '../../../store/actions/authentication';
-
-import Input from '../../../components/UI/Input/Input';
-import Button from '../../../components/UI/Button/Button';
+    
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 
 class Login extends Component {
 
     state = {
-        email: null,
-        password: null,
+        email: "",
+        password: "",
     }
 
     handleInputChange = (event) => {
@@ -27,30 +28,64 @@ class Login extends Component {
             password: this.state.password,
         }
 
-        this.props.loginUser(user);
+        this.props.loginUser(user, this.props.history);
     }
 
     render(){
+
         return(
             <div>
                 <h1>Log In</h1>
                 <form onSubmit={this.handleSubmit}>
-                    <Input  type={"email"} 
-                            text={"Email"} 
-                            changed={this.handleInputChange} 
-                            name="email"
-                            max="64"
-                            valid={true}/>
-                    <Input type={"password"} 
-                           text={"Password"}
-                           changed={this.handleInputChange}
-                           name="password"
-                           max="30"
-                           valid={true}/>
-                    <div>
-                        <Button text="send"/>
-                    </div>
-                    <NavLink to={"auth"} onClick={this.props.clicked}>Sign Up</NavLink>                
+                    <Grid container spacing={1}>
+                        <Grid item xs={12}>
+                            <TextField 
+                                fullWidth
+                                id="email" 
+                                label="Email*"
+                                name="email"
+                                type="email"
+                                variant="outlined"
+                                value={this.state.email}
+                                onChange={this.handleInputChange}/> 
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <TextField 
+                                fullWidth
+                                id="password" 
+                                label="Password*"
+                                name="password"
+                                type="password"
+                                variant="outlined"
+                                value={this.state.password}
+                                onChange={this.handleInputChange}/>  
+                        </Grid>
+                    </Grid>
+
+                    <br/>
+
+                    <ButtonGroup
+                        orientation="vertical"
+                        color="primary"
+                        aria-label="vertical outlined primary button group">
+
+                        <Button variant="outlined" 
+                                color="primary" 
+                                size='medium' 
+                                onClick={this.handleSubmit}>
+                            Submit
+                        </Button>
+
+                        <Button variant="outlined" 
+                                color="primary" 
+                                size='medium' 
+                                onClick={this.props.clicked}>
+                            Create account
+                        </Button> 
+
+                    </ButtonGroup>             
+                    <button style={{display: "none"}}></button>
                 </form>
             </div>
         )
