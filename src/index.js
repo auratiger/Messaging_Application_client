@@ -6,6 +6,7 @@ import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
 
 import './index.css';
+import './assets/index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import rootReducers from './store/reducers/index';

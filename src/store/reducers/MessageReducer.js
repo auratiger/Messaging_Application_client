@@ -1,8 +1,12 @@
 import {ADD_MESSAGE, SET_MESSAGES} from '../actions/actionTypes';
-// const socket = Singleton.getInstance();
 
 const initialState = {
     messages: [],
+    groups: [{
+        id: 1,
+        name: "general",
+        users: [],
+    }],
 }
 
 const reducer = (state = initialState, action) => {

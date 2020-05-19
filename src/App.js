@@ -42,8 +42,8 @@ class App extends Component {
   renderAuthPage = () => {
     return(
       <Switch>
-          <Route exact path="/resent/" component={MainPage}/>
-          <Route exact path="/email_verification/verify/{id}" component={EmailVerificationPage}/>
+          <Route exact path="/main/chatroom/*" component={MainPage}/>
+          <Route exact path="/email_verification/verify/*/*" component={EmailVerificationPage}/>
           <Route exact path="/" component={MainPage}/>
           <Redirect to="/auth" component={Auth}/>
       </Switch>

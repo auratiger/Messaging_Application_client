@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import ChatWindow from '../../components/chatWindow/ChatWindow';
+import Messenger from "../../components/chatRoom/ChatRoom";
 
 class MainPage extends Component {
     render(){
-
         return(
-            <ChatWindow/>
+            <Messenger/>
         )
     }
 }
