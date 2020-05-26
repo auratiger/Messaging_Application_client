@@ -9,3 +9,10 @@ export const USER_LOG_OUT = "USER_LOG_OUT";
 
 export const SET_CURRENT_USER = "SET_CURRENT_USER"; 
 export const GET_ERRORS = 'GET_ERRORS';
+
+export const CREATE_CONNECTION = 'CREATE_CONNECTION';
+export const CLOSE_CONNECTION = 'CLOSE_CONNECTION';
+
+export const CREATE_GROUP = 'CREATE_GROUP';
+export const GET_GROUPS = 'GET_GROUPS';
+export const SET_CURRENT_GROUP = "SET_CURRENT_GROUP";

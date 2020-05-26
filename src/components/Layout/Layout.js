@@ -4,11 +4,11 @@ import Toolbar from '../Navigation/Toolbar/Toolbar';
 
 class Layout extends Component{
     render(){
-        console.log(this.props.history);
+        // console.log(this.props.history);
         
         return(
             <main>
-                {/* <Toolbar/> */}
+                <Toolbar/>
                 {this.props.children}
             </main>
         )

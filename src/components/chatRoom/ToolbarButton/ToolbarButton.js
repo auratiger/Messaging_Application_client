@@ -1,9 +1,11 @@
 import React from 'react';
 import './ToolbarButton.css';
 
-export default function ToolbarButton(props) {
+const ToolbarButton = React.forwardRef((props, ref) => {
     const { icon } = props;
     return (
-      <i className={`toolbar-button ${icon}`} />
+      <i ref={ref} {...props} onClick={props.onClick} className={`toolbar-button ${icon}`} />
     );
-}
+})
+
+export default ToolbarButton;

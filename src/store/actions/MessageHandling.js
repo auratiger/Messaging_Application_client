@@ -1,10 +1,10 @@
 import axios from 'axios';
 import {GET_ERRORS, SET_MESSAGES, ADD_MESSAGE} from './actionTypes';
 
-export const getMessages = (user) => dispatch => {
-
+export const getMessages = (user, groupid) => dispatch => {
+    
     return new Promise((resolve, reject) => {
-        axios.post("http://localhost:8080/ChatRoom/rest/chat/resource/messages/"+user.id+"/1", user)
+        axios.get("http://localhost:8080/ChatRoom/rest/chat/resource/messages/"+user.id+"/"+groupid, user)
         .then(res => {                        
             dispatch(setMessages(res.data.messages))
             resolve();

@@ -7,20 +7,30 @@ import Message from '../Message/Message';
 import moment from 'moment';
 
 import { addMessage, getMessages } from '../../../store/actions/MessageHandling';
+import { connectWS } from '../../../store/actions/WebSocket';
 
 import './MessageList.css';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
+}));
 
 const MessageList = (props) => {
   const [userMessage, setUserMessage] = useState("");
-  const [ws, setWs] = useState(null);
   const [loaded, setLoaded] = useState(false);
-  const [wsError, setWsError] = useState(false);
   const messagesEndRef = useRef(null)
+  const classes = useStyles();
 
   useEffect(() => {
-    props.getMessages(props.user).then(() => {
+    props.getMessages(props.user, props.currentGroup.id).then(() => {
       setLoaded(true);
-      connect();
+      props.connectWS(props.user.id);
     });    
   }, [])
 
@@ -32,64 +42,6 @@ const MessageList = (props) => {
     autoscrollToBottom();
   })
 
-  let timeout = 250;
-
-  const connect = () => {
-    var ws = new WebSocket("ws://localhost:8080/ChatRoom/chat/" + props.user.id);
-    var connectInterval;
-
-    // websocket onopen event listener
-    ws.onopen = () => {
-      console.log("connected websocket main component");
-
-      setWs(ws);
-
-      timeout = 250; // reset timer to 250 on open of websocket connection 
-      clearTimeout(connectInterval); // clear Interval on on open of websocket connection
-    };
-
-    // websocket onclose event listener
-    ws.onclose = e => {
-      if (e.code === 1003) {
-
-        ws.close();
-        setWsError(true);
-      } else {
-        console.log(
-          `Socket is closed. Reconnect will be attempted in ${Math.min(
-            10000 / 1000,
-            (timeout + timeout) / 1000
-          )} second.`,
-          e.reason
-        );
-
-        timeout = timeout + timeout; //increment retry interval
-        connectInterval = setTimeout(check, Math.min(10000, timeout)); //call check function after timeout
-      }
-    };
-
-    // websocket onerror event listener
-    ws.onerror = err => {
-      console.error(
-        "Socket encountered error: ",
-        err.message,
-        "Closing socket"
-      );
-
-      ws.close();
-    };
-
-    ws.onmessage = message => {
-      console.log("message from server: " + message.data);
-      // this.props.addMessage(JSON.parse(message.data));
-    }
-  }
-
-  const check = () => {
-    const {ws} = this.state;
-    if((!ws || ws.readyState === WebSocket.CLOSED) && !this.state.wsError) this.connect();
-  };
-  
   const sendMessage = (event) => {
     switch(event.which){
         case 13:
@@ -98,30 +50,25 @@ const MessageList = (props) => {
             if(userMessage.trim() === ""){
                 return;
             }                
-
+            
             const obj = {
-                roomid: 1,
+                roomid: props.currentGroup.id,
                 message: userMessage,
             }
               
             try{
-                ws.send(JSON.stringify(obj));    
+                props.ws.send(JSON.stringify(obj));    
             }catch(err){                    
                 console.log(err);
             }
 
-            // TODO: this is a temporary solution untill I find a better way to display the date -=-=-=-=-=-
             let date = new Date();
-            let rep = (number) => {
-                return number < 10 ? "0" + number : number;
-            }
 
             props.addMessage({
                 text: userMessage,
                 author: props.user.username,
-                created: date.getFullYear() + "-" + rep(date.getMonth()) + "-" + rep(date.getDate()) + " " + date.getHours() + ":" + date.getMinutes(),
+                created: moment(date.getTime()).format("YYYY-MM-DD mm:ss"),
             });
-            // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
             setUserMessage("");
             return true;
@@ -133,6 +80,10 @@ const MessageList = (props) => {
   const messageHandler = (event) => {
     setUserMessage(event.target.value);
   }
+
+  const handleToggle = () => {
+    setLoaded(!loaded);
+  };
 
   const renderMessages = () => {
     let i = 0;
@@ -195,8 +146,13 @@ const MessageList = (props) => {
 
   return (
     <div className="message-list">
+
+      <Backdrop className={classes.backdrop} open={!loaded} onClick={handleToggle}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <Toolbar
-        title="Conversation Title"
+        title={props.currentGroup.name}
         rightItems={[
           <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
           <ToolbarButton key="video" icon="ion-ios-videocam" />,
@@ -211,6 +167,7 @@ const MessageList = (props) => {
        onChange={messageHandler}
        onKeyDown={sendMessage}
        value={userMessage}
+       disabled={props.currentGroup.id===0 ? true : false}
        rightItems={[
         <ToolbarButton key="photo" icon="ion-ios-camera" />,
         <ToolbarButton key="image" icon="ion-ios-image" />,
@@ -225,10 +182,12 @@ const MessageList = (props) => {
 
 const mapStateToProps = state => {
   return {
-    messages: state.resources.messages,
-    groups: state.resources.groups,
+    messages: state.messages.messages,
+    groups: state.groups.groups,
+    currentGroup: state.groups.currentGroup,
     user: state.auth.user,
+    ws: state.webSocket.ws,
   };
 };
 
-export default connect(mapStateToProps, { addMessage, getMessages })(MessageList);
+export default connect(mapStateToProps, { addMessage, getMessages, connectWS})(MessageList);

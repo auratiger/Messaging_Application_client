@@ -11,6 +11,7 @@ export default function Compose(props) {
           onChange={props.onChange}
           onKeyDown={props.onKeyDown}
           value={props.value}
+          disabled={props.disabled}
         />
 
         {

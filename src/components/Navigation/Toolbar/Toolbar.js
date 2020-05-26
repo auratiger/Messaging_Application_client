@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 
 import classes from './Toolbar.module.css';
 import {logoutUser} from '../../../store/actions/authentication';
+import {closeWebSocket} from '../../../store/actions/WebSocket';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -17,6 +18,8 @@ const toolbar = withRouter((props) => {
     let fun = () => {
         if(props.isAuthenticated){
             props.logoutUser();
+            props.ws.close();
+            props.closeWebSocket();
         }
         props.history.push("/auth")
     }
@@ -25,7 +28,7 @@ const toolbar = withRouter((props) => {
         <header>
             <div className={classes.root}>
                 <AppBar position="static">
-                    <Toolbar>
+                    <Toolbar variant="dense">
                         <Typography variant="h5" className={classes.root}>
                             {user}
                         </Typography>
@@ -41,7 +44,8 @@ const mapStateToProps = state => {
     return{
         username: state.auth.user.username,
         isAuthenticated: state.auth.isAuthenticated,
+        ws: state.webSocket.ws,
     };
 };
 
-export default connect(mapStateToProps, {logoutUser})(toolbar);
+export default connect(mapStateToProps, {logoutUser, closeWebSocket})(toolbar);
