@@ -1,4 +1,6 @@
 import {CREATE_CONNECTION, CLOSE_CONNECTION} from './actionTypes';
+import {addMessage} from './MessageHandling';
+import {updateLastMessage} from './GroupHandling';
 
 var timeout = 250;
 var ws;
@@ -48,13 +50,13 @@ export const connectWS = (id) => dispatch => {
     };
 
     ws.onmessage = message => {
-      console.log("message from server: " + message.data);
-      // this.props.addMessage(JSON.parse(message.data));
+      let jsonMessage = JSON.parse(message.data);
+      dispatch(addMessage(jsonMessage));
+      dispatch(updateLastMessage({id: jsonMessage.roomid, text: jsonMessage.text}));
     }
 
     dispatch(setWebSocket(ws));
 }
-
 
 const setWebSocket = ws => {
     return {

@@ -50,6 +50,7 @@ function ConversationList(props) {
   const handleGroupClick = (group) => {    
     props.setCurrentGroup(group);
     props.getMessages(props.user, group.id);
+    console.log(props.user);
   }
 
     return (
@@ -58,7 +59,7 @@ function ConversationList(props) {
           title="Messenger"
           leftItems={[
             <Tooltip key="cog" title="Settings">
-              <ToolbarButton key="cog" icon="ion-ios-cog" />
+              <ToolbarButton key="cog" icon="ion-ios-cog"/>
             </Tooltip>
           ]}
           rightItems={[

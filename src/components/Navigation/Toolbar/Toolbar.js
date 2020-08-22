@@ -10,6 +10,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import ToolbarButton from '../../chatRoom/ToolbarButton/ToolbarButton';
+import Badge from '@material-ui/core/Badge';
+
 
 const toolbar = withRouter((props) => {
 
@@ -32,6 +35,10 @@ const toolbar = withRouter((props) => {
                         <Typography variant="h5" className={classes.root}>
                             {user}
                         </Typography>
+                        {/* <Badge color="secondary" badgeContent={0} showZero>
+                        
+                        </Badge> */}
+                        <ToolbarButton key="cog" style={{'color': "white", 'padding-right': '15px'}} icon="ion-md-person-add"/>
                         <Button color="inherit" onClick={fun}>{auth}</Button>
                     </Toolbar>
                 </AppBar>   

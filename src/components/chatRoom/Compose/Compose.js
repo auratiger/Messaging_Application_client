@@ -2,6 +2,7 @@ import React from 'react';
 import './Compose.css';
 
 export default function Compose(props) {
+  
     return (
       <div className="compose">
         <input
@@ -12,6 +13,9 @@ export default function Compose(props) {
           onKeyDown={props.onKeyDown}
           value={props.value}
           disabled={props.disabled}
+          ref={props.reference}
+          style={props.style}
+          autoFocus
         />
 
         {

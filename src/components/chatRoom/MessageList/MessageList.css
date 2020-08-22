@@ -1,4 +1,13 @@
 .message-list-container {
   padding: 10px;
   padding-bottom: 70px;
+  height: 100%;
+}
+
+.message-list{
+  height: calc(100% - 63px);
+}
+
+.message-container {
+  height: calc(100% - 63px);
 }

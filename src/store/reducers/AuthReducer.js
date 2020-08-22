@@ -8,7 +8,7 @@ const initialState = () => {
 
         return {
             isAuthenticated: true,
-            user: JSON.parse(decoded.sub),
+            user: decoded.sub,
         }
     }else{
         return {

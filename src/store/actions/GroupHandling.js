@@ -1,15 +1,16 @@
 import axios from 'axios';
-import {CREATE_GROUP, GET_GROUPS, SET_CURRENT_GROUP} from './actionTypes';
+import {CREATE_GROUP, GET_GROUPS, SET_CURRENT_GROUP, UPDATE_LAST_MESSAGE} from './actionTypes';
 
 export const getGroups = (user) => dispatch => {
     axios.get('http://localhost:8080/ChatRoom/rest/chat/resource/rooms/' + user.id)
       .then(response => {
-        let newConversations = response.data.groups.map(result => {
+        let newConversations = response.data.groups.map(result => {          
           return {
             id: result.id,
             image: "data:image/png;base64," + result.image,
             name: result.name,
-            text: 'Hello world! This is a long message that needs to be truncated.'
+            users: result.users,
+            text: result.message,
           };
         });
         dispatch(setGroups(newConversations));        
@@ -30,6 +31,13 @@ export const setCurrentGroup = (currentGroup) => dispatch => {
       type: SET_CURRENT_GROUP,
       payload: currentGroup,
     })
+}
+
+export const updateLastMessage = (newMessage) => dispatch => {
+  dispatch({
+    type: UPDATE_LAST_MESSAGE,
+    payload: newMessage,
+  })
 }
 
 export const createGroup = (user, groupName) => dispatch => {

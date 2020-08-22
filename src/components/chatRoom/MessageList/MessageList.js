@@ -1,18 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import Compose from '../Compose/Compose';
 import Toolbar from '../Toolbar/Toolbar';
 import ToolbarButton from '../ToolbarButton/ToolbarButton';
 import Message from '../Message/Message';
-import moment from 'moment';
 
 import { addMessage, getMessages } from '../../../store/actions/MessageHandling';
+import {updateLastMessage} from '../../../store/actions/GroupHandling';
 import { connectWS } from '../../../store/actions/WebSocket';
 
 import './MessageList.css';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
+import { Scrollbars } from 'react-custom-scrollbars';
+
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -24,22 +27,40 @@ const useStyles = makeStyles((theme) => ({
 const MessageList = (props) => {
   const [userMessage, setUserMessage] = useState("");
   const [loaded, setLoaded] = useState(false);
-  const messagesEndRef = useRef(null)
+  const [scrollHeight, setScrollHeight] = useState(0);
+  const mounted = useRef(false);
+  const messageListRef = useRef();
+  const composeRef = useRef(null);
+  const scrollbar = useRef(null);
   const classes = useStyles();
 
   useEffect(() => {
-    props.getMessages(props.user, props.currentGroup.id).then(() => {
-      setLoaded(true);
-      props.connectWS(props.user.id);
-    });    
+    setScrollHeight(scrollbar.current.getScrollHeight());
   }, [])
 
-  const autoscrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
-  }
-
   useEffect(() => {
-    autoscrollToBottom();
+    if(!mounted.current){
+      // mounting phase
+      props.getMessages(props.user, props.currentGroup.id).then(() => {
+        setLoaded(true);
+        props.connectWS(props.user.id);
+      });
+      mounted.current = true;    
+    }else{
+      // update phase
+      composeRef.current.focus()
+      //the - 126.53px is to compensate for the toolbarButton icons which extend the text field
+      composeRef.current.style.width = `${messageListRef.current.clientWidth - 126.53}px`
+    }
+
+    if(scrollbar.current){
+      const newScrollHeight = scrollbar.current.getScrollHeight();
+
+      if(scrollHeight < newScrollHeight){
+        scrollbar.current.scrollTop(scrollHeight);
+        setScrollHeight(scrollbar.current.getScrollHeight());
+      }
+    }
   })
 
   const sendMessage = (event) => {
@@ -55,10 +76,13 @@ const MessageList = (props) => {
                 roomid: props.currentGroup.id,
                 message: userMessage,
             }
+
+            let sent = false;
               
             try{
                 props.ws.send(JSON.stringify(obj));    
-            }catch(err){                    
+                sent = true;
+            }catch(err){          
                 console.log(err);
             }
 
@@ -67,7 +91,13 @@ const MessageList = (props) => {
             props.addMessage({
                 text: userMessage,
                 author: props.user.username,
+                sent: sent,
                 created: moment(date.getTime()).format("YYYY-MM-DD mm:ss"),
+            });
+            
+            props.updateLastMessage({
+              text: userMessage,
+              id: props.currentGroup.id,
             });
 
             setUserMessage("");
@@ -147,35 +177,45 @@ const MessageList = (props) => {
   return (
     <div className="message-list">
 
-      <Backdrop className={classes.backdrop} open={!loaded} onClick={handleToggle}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <div className="message-container">     
+        <Backdrop className={classes.backdrop} open={!loaded} onClick={handleToggle}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
 
-      <Toolbar
-        title={props.currentGroup.name}
-        rightItems={[
-          <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
-          <ToolbarButton key="video" icon="ion-ios-videocam" />,
-          <ToolbarButton key="phone" icon="ion-ios-call" />
-        ]}
-      />
+        <Toolbar
+          title={props.currentGroup.name}
+          rightItems={[
+            <ToolbarButton onClick={props.setPocket} key="info" icon="ion-ios-information-circle-outline" />,
+            <ToolbarButton key="video" icon="ion-ios-videocam" />,
+            <ToolbarButton key="phone" icon="ion-ios-call" />
+          ]}
+        />
 
-      <div className="message-list-container">{renderMessages()}</div>
-      <div ref={messagesEndRef} />
+        <Scrollbars 
+                ref={scrollbar}
+                autoHide
+                autoHideTimeout={1000}
+                autoHideDuration={200}
+                thumbSize={100}>
+          <div ref={messageListRef} className="message-list-container">
+            {renderMessages()}
+          </div>
+        </Scrollbars>
+      </div>
 
       <Compose
-       onChange={messageHandler}
-       onKeyDown={sendMessage}
-       value={userMessage}
-       disabled={props.currentGroup.id===0 ? true : false}
-       rightItems={[
-        <ToolbarButton key="photo" icon="ion-ios-camera" />,
+      className={"message-compose"}
+      onChange={messageHandler}
+      onKeyDown={sendMessage}
+      value={userMessage}
+      disabled={props.currentGroup.id===0 ? true : false}
+      reference={composeRef}
+      rightItems={[
         <ToolbarButton key="image" icon="ion-ios-image" />,
         <ToolbarButton key="audio" icon="ion-ios-mic" />,
-        <ToolbarButton key="money" icon="ion-ios-card" />,
-        <ToolbarButton key="games" icon="ion-logo-game-controller-b" />,
         <ToolbarButton key="emoji" icon="ion-ios-happy" />
       ]} />
+
     </div>
   );
 }
@@ -190,4 +230,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { addMessage, getMessages, connectWS})(MessageList);
+export default connect(mapStateToProps, { addMessage, getMessages, connectWS, updateLastMessage})(MessageList);
